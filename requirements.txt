@@ -5,3 +5,4 @@ flask_sqlalchemy
 flask_bcrypt
 flask_login
 gunicorn
+xhtml2pdf
