@@ -1,0 +1,67 @@
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+input, button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+/* ─── GLOBAL ───────────────────────────────────────────── */
+body { font-family: "Inter", system-ui, sans-serif; }
+
+/* ─── STAT CARDS ───────────────────────────────────────── */
+.stat-card {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: .5rem;
+  padding: 1rem 1.25rem;
+  text-align: center;
+}
+.stat-card .value { font-size: 1.5rem; font-weight: 600; }
+.stat-card .label { font-size: .875rem; color: #6c757d; }
+
+/* ─── PRODUCT GRID ────────────────────────────────────── */
+.product-grid { display: grid; gap: 1.25rem; }
+@media (min-width: 576px) { .product-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 992px) { .product-grid { grid-template-columns: 1fr 1fr 1fr; } }
+
+/* product card image */
+.product-img { object-fit: contain; height: 100%; }
+
+/* star color */
+.star-wrap .fa-star,
+.star-wrap .fa-star-half-alt { color: #ffc107; }

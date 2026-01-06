@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #999; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h2>Product Price Tracker Report</h2>
+    <p>User: {{ user.email }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Current Price</th>
+                <th>Target Price</th>
+                <th>URL</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in products %}
+            <tr>
+                <td>{{ p.title }}</td>
+                <td>₹{{ p.current_price }}</td>
+                <td>₹{{ p.target_price }}</td>
+                <td>{{ p.url }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

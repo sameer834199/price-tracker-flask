@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PriceGenius - Smart Price Tracking Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary-color: #0ea5e9;
+            --accent-color: #f59e0b;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --bg-light: #f8fafc;
+            --border-color: #e2e8f0;
+            --success-color: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            color: var(--text-dark);
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: #ffffff;
+            padding: 16px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar-brand i {
+            color: var(--accent-color);
+        }
+
+        .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 8px 16px !important;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+            background-color: var(--bg-light);
+        }
+
+        .btn-nav-login {
+            background: transparent;
+            color: var(--text-dark);
+            border: 1.5px solid var(--border-color);
+            padding: 8px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-right: 12px;
+        }
+
+        .btn-nav-login:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: var(--bg-light);
+        }
+
+        .btn-nav-register {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 26px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-nav-register:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+            padding: 80px 0 60px 0;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: #eff6ff;
+            color: var(--primary-color);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            border: 1px solid #dbeafe;
+        }
+
+        .hero-title {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            line-height: 1.7;
+        }
+
+        /* Stats Section */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin: 50px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        /* Search Section */
+        .search-container {
+            max-width: 650px;
+            margin: 40px auto 20px auto;
+            position: relative;
+        }
+
+        .search-wrapper {
+            display: flex;
+            gap: 12px;
+            background: white;
+            padding: 8px;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid var(--border-color);
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            background: var(--bg-light);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-gray);
+        }
+
+        .btn-search {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-search:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+        }
+
+        .search-hint {
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-top: 16px;
+        }
+
+        /* Features Grid */
+        .features-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            transform: translateY(-4px);
+            border-color: var(--primary-color);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+        }
+
+        .feature-icon i {
+            font-size: 1.6rem;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .feature-text {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Modal Styles */
+        .modal-content {
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 24px 32px;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--text-dark);
+        }
+
+        .modal-body {
+            padding: 32px;
+        }
+
+        .modal-heading {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .modal-subheading {
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            margin-bottom: 32px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            outline: none;
+        }
+
+        .btn-modal-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            width: 100%;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-modal-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-modal-primary:disabled {
+            background: var(--text-gray);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .modal-footer-text {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .modal-footer-text a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .modal-footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        .forgot-password-link {
+            text-align: right;
+            margin-top: 8px;
+        }
+
+        .forgot-password-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .forgot-password-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Alert Success */
+        .alert-success-custom {
+            background: #ecfdf5;
+            border: 1px solid #86efac;
+            color: #166534;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: #94a3b8;
+            padding: 40px 0;
+            margin-top: 80px;
+        }
+
+        footer h5 {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        footer p {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .stats-row {
+                gap: 40px;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .search-wrapper {
+                flex-direction: column;
+            }
+
+            .btn-search {
+                width: 100%;
+            }
+
+            .navbar-nav .btn-nav-login,
+            .navbar-nav .btn-nav-register {
+                margin: 8px 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line"></i>PriceGenius
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto ms-lg-4">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#featuresModal">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#pricingModal">Pricing</a>
+                    </li>
+                </ul>
+                <div class="navbar-nav">
+                    <button class="btn-nav-login" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        Log In
+                    </button>
+                    <button class="btn-nav-register" data-bs-toggle="modal" data-bs-target="#registerModal">
+                        Get Started
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="text-center">
+                        <span class="hero-badge">
+                            <i class="fas fa-bolt me-1"></i> Real-time Price Intelligence
+                        </span>
+                        <h1 class="hero-title">Never Overpay Again with Smart Price Tracking</h1>
+                        <p class="hero-subtitle">
+                            Track prices across Amazon & Flipkart automatically. Get instant alerts when prices drop. 
+                            Save money on every purchase with intelligent monitoring.
+                        </p>
+
+                        <!-- Search Bar -->
+                        <div class="search-container">
+                            <div class="search-wrapper">
+                                <input type="text" class="search-input" id="searchInput" 
+                                       placeholder="Enter product URL or search keywords...">
+                                <button class="btn-search" onclick="handleSearch()">
+                                    <i class="fas fa-search me-2"></i>Track Now
+                                </button>
+                            </div>
+                            <p class="search-hint">
+                                Try: "iPhone 15", "Gaming Laptop", or paste any Amazon/Flipkart URL
+                            </p>
+                        </div>
+
+                        <!-- Stats -->
+                        <div class="stats-row">
+                            <div class="stat-box">
+                                <span class="stat-number">2M+</span>
+                                <span class="stat-label">Products Tracked</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-number">50K+</span>
+                                <span class="stat-label">Active Users</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-number">₹12Cr+</span>
+                                <span class="stat-label">Total Savings</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">Powerful Features for Smart Shopping</h2>
+            <p class="section-subtitle">Everything you need to track prices and save money automatically</p>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3 class="feature-title">AI-Powered Monitoring</h3>
+                        <p class="feature-text">Advanced algorithms track prices 24/7 across multiple platforms in real-time</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <h3 class="feature-title">Instant Alerts</h3>
+                        <p class="feature-text">Get notified immediately when prices drop to your target range</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3 class="feature-title">Price Analytics</h3>
+                        <p class="feature-text">View detailed price history and trends with interactive charts</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h3 class="feature-title">Multi-Platform Support</h3>
+                        <p class="feature-text">Track products from Amazon, Flipkart, and Myntra simultaneously</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3 class="feature-title">Email Notifications</h3>
+                        <p class="feature-text">Receive detailed alerts with product info and buying recommendations</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <h3 class="feature-title">Export Data</h3>
+                        <p class="feature-text">Download your tracking history in CSV or PDF format anytime</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Sign In to PriceGenius</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="loginForm">
+                    <div class="modal-body">
+                        <h4 class="modal-heading">Welcome Back!</h4>
+                        <p class="modal-subheading">Sign in to continue tracking and saving</p>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" name="email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" placeholder="Enter your password" required>
+                            <div class="forgot-password-link">
+                                <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
+                                    Forgot Password?
+                                </a>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-modal-primary">Sign In</button>
+
+                        <div class="modal-footer-text">
+                            Don't have an account? 
+                            <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal">Create Account</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Create Account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="registerForm">
+                    <div class="modal-body">
+                        <h4 class="modal-heading">Get Started Free</h4>
+                        <p class="modal-subheading">Join thousands of smart shoppers saving money daily</p>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" name="email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" placeholder="Create a password" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" name="confirm_password" placeholder="Confirm your password" required>
+                        </div>
+
+                        <button type="submit" class="btn-modal-primary">Create My Account</button>
+
+                        <div class="modal-footer-text">
+                            Already have an account? 
+                            <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Sign In</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="forgotPasswordModalLabel">Reset Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="forgotPasswordForm">
+                    <div class="modal-body">
+                        <h4 class="modal-heading">Forgot Your Password?</h4>
+                        <p class="modal-subheading">Enter your email and we'll send you a reset link</p>
+
+                        <div id="forgotPasswordAlert" class="alert-success-custom">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span id="forgotPasswordMessage"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" name="email" id="forgotEmail" placeholder="Enter your email address" required>
+                        </div>
+
+                        <button type="submit" class="btn-modal-primary" id="forgotPasswordBtn">
+                            <i class="fas fa-paper-plane me-2"></i>Send Reset Link
+                        </button>
+
+                        <div class="modal-footer-text">
+                            Remember your password? 
+                            <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Sign In</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Modal -->
+    <div class="modal fade" id="featuresModal" tabindex="-1" aria-labelledby="featuresModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="featuresModalLabel">Platform Features</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-4">
+                        <div class="col-md-4 text-center">
+                            <div class="feature-icon mx-auto mb-3">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <h6 class="fw-bold">AI-Powered Monitoring</h6>
+                            <p class="text-muted small">Smart algorithms track prices 24/7 across multiple platforms</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="feature-icon mx-auto mb-3">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h6 class="fw-bold">Real-Time Alerts</h6>
+                            <p class="text-muted small">Get instant notifications when your target prices are reached</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="feature-icon mx-auto mb-3">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <h6 class="fw-bold">Price Analytics</h6>
+                            <p class="text-muted small">View price history and trends with detailed charts</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="feature-icon mx-auto mb-3">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <h6 class="fw-bold">Multi-Platform</h6>
+                            <p class="text-muted small">Track products from Amazon, Flipkart, and Myntra</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="feature-icon mx-auto mb-3">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h6 class="fw-bold">Email Notifications</h6>
+                            <p class="text-muted small">Receive detailed email alerts with product information</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="feature-icon mx-auto mb-3">
+                                <i class="fas fa-download"></i>
+                            </div>
+                            <h6 class="fw-bold">Export Data</h6>
+                            <p class="text-muted small">Download your tracking data in CSV or PDF format</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal">
+                        Get Started Free
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing Modal -->
+    <div class="modal fade" id="pricingModal" tabindex="-1" aria-labelledby="pricingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pricingModalLabel">Pricing Plans</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="card h-100 border">
+                                <div class="card-body text-center p-4">
+                                    <h5 class="fw-bold mb-3">Free</h5>
+                                    <h3 class="text-primary mb-4">₹0<small class="text-muted fs-6">/month</small></h3>
+                                    <ul class="list-unstyled text-start mb-4">
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Track up to 10 products</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Email notifications</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Basic price history</li>
+                                        <li class="mb-2"><i class="fas fa-times text-muted me-2"></i> Advanced analytics</li>
+                                    </ul>
+                                    <button class="btn btn-outline-primary w-100">Current Plan</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 border-primary shadow">
+                                <div class="card-body text-center p-4">
+                                    <span class="badge bg-primary mb-2">Most Popular</span>
+                                    <h5 class="fw-bold mb-3">Pro</h5>
+                                    <h3 class="text-primary mb-4">₹299<small class="text-muted fs-6">/month</small></h3>
+                                    <ul class="list-unstyled text-start mb-4">
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Track up to 100 products</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Email + SMS alerts</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Advanced analytics</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Priority support</li>
+                                    </ul>
+                                    <button class="btn btn-primary w-100">Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 border">
+                                <div class="card-body text-center p-4">
+                                    <h5 class="fw-bold mb-3">Enterprise</h5>
+                                    <h3 class="text-primary mb-4">₹999<small class="text-muted fs-6">/month</small></h3>
+                                    <ul class="list-unstyled text-start mb-4">
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Unlimited products</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> All notification types</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> API access</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Custom integrations</li>
+                                    </ul>
+                                    <button class="btn btn-outline-primary w-100">Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info mt-4 mb-0">
+                        <h6 class="fw-bold mb-2"><i class="fas fa-graduation-cap me-2"></i>Academic Project Notice</h6>
+                        <p class="mb-0 small">This is currently an academic project. All features are free during the development phase!</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal">
+                        Start Free Trial
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-chart-line me-2"></i>PriceGenius</h5>
+                    <p>Smart price tracking platform with AI-powered monitoring</p>
+                    <p class="mb-0">Making smart shopping accessible to everyone</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-1">&copy; 2025 PriceGenius. Academic Project.</p>
+                    <p class="mb-0"><small>Reg.No: 24091F0033 | Guide: Dr.G.SunilVijayKumar</small></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Handle search
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) {
+                alert('Please enter a search term or product URL');
+                return;
+            }
+            const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
+            sessionStorage.setItem('pendingSearch', query);
+        }
+
+        // Handle login form
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Signing in...';
+
+            fetch('/login', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    alert(data.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            })
+            .catch(error => {
+                console.error('Login error:', error);
+                alert('Login failed. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            });
+        });
+
+        // Handle register form
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating account...';
+
+            fetch('/register', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    alert(data.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            })
+            .catch(error => {
+                console.error('Register error:', error);
+                alert('Registration failed. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            });
+        });
+
+        // Handle forgot password form
+        document.getElementById('forgotPasswordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const submitBtn = document.getElementById('forgotPasswordBtn');
+            const originalText = submitBtn.innerHTML;
+            const alertBox = document.getElementById('forgotPasswordAlert');
+            const alertMessage = document.getElementById('forgotPasswordMessage');
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+            alertBox.style.display = 'none';
+
+            fetch('/forgot-password', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+
+                if (data.success) {
+                    alertMessage.textContent = data.message;
+                    alertBox.style.display = 'block';
+                    document.getElementById('forgotEmail').value = '';
+
+                    // Auto close modal after 3 seconds
+                    setTimeout(function() {
+                        const modalElement = document.getElementById('forgotPasswordModal');
+                        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                        if (modalInstance) {
+                            modalInstance.hide();
+                        }
+                        alertBox.style.display = 'none';
+                    }, 3000);
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Forgot password error:', error);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                alert('Failed to send reset link. Please try again.');
+            });
+        });
+
+        // Reset alert when modal closes
+        document.getElementById('forgotPasswordModal').addEventListener('hidden.bs.modal', function () {
+            document.getElementById('forgotPasswordAlert').style.display = 'none';
+            document.getElementById('forgotPasswordForm').reset();
+        });
+
+        // Search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleSearch();
+            }
+        });
+    </script>
+        <!-- Chatbot Widget -->
+    <div class="chatbot-container" id="chatbotContainer">
+        <!-- Chat Bubble -->
+        <div class="chat-bubble" id="chatBubble">
+            <i class="fas fa-comment-dots"></i>
+        </div>
+
+        <!-- Chat Window -->
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-robot me-2"></i>
+                    <div>
+                        <h6 class="mb-0">PriceGenius Assistant</h6>
+                        <small class="text-white-50">Powered by Gemini AI</small>
+                    </div>
+                </div>
+                <button class="chat-close" id="chatClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="chat-body" id="chatBody">
+                <div class="bot-message">
+                    <div class="message-content">
+                        <strong>👋 Hi! I'm your PriceGenius Assistant.</strong><br>
+                        Ask me anything about price tracking, features, or how to save money!
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-footer">
+                <input type="text" class="chat-input" id="chatInput" 
+                       placeholder="Ask me anything...">
+                <button class="chat-send" id="chatSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .chat-bubble {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .chat-bubble:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(37, 99, 235, 0.5);
+        }
+
+        .chat-bubble i {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 380px;
+            height: 500px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-window.active {
+            display: flex;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: white;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h6 {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .chat-close {
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 4px 8px;
+        }
+
+        .chat-close:hover {
+            opacity: 0.8;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .chat-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-body::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .bot-message, .user-message {
+            margin-bottom: 16px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-content {
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 85%;
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+
+        .bot-message .message-content {
+            background: white;
+            border: 1px solid #e2e8f0;
+            margin-right: auto;
+        }
+
+        .user-message .message-content {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: white;
+            margin-left: auto;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #64748b;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .chat-footer {
+            padding: 16px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 24px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .chat-input:focus {
+            border-color: #2563eb;
+        }
+
+        .chat-send {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chat-send:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 480px) {
+            .chat-window {
+                width: calc(100vw - 40px);
+                height: 70vh;
+                bottom: 80px;
+            }
+        }
+    </style>
+
+    <script>
+        // Chatbot functionality
+        const chatBubble = document.getElementById('chatBubble');
+        const chatWindow = document.getElementById('chatWindow');
+        const chatClose = document.getElementById('chatClose');
+        const chatBody = document.getElementById('chatBody');
+        const chatInput = document.getElementById('chatInput');
+        const chatSend = document.getElementById('chatSend');
+
+        // Toggle chat window
+        chatBubble.addEventListener('click', () => {
+            chatWindow.classList.toggle('active');
+            if (chatWindow.classList.contains('active')) {
+                chatInput.focus();
+            }
+        });
+
+        chatClose.addEventListener('click', () => {
+            chatWindow.classList.remove('active');
+        });
+
+        // Send message function
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            chatInput.value = '';
+            chatSend.disabled = true;
+
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'bot-message';
+            typingDiv.innerHTML = '<div class="message-content typing-indicator"><span></span><span></span><span></span></div>';
+            chatBody.appendChild(typingDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                
+                // Remove typing indicator
+                typingDiv.remove();
+
+                if (data.success) {
+                    addMessage(data.message, 'bot');
+                } else {
+                    addMessage(data.message || 'Sorry, something went wrong.', 'bot');
+                }
+            } catch (error) {
+                typingDiv.remove();
+                addMessage('Sorry, I\'m having trouble connecting. Please try again.', 'bot');
+            }
+
+            chatSend.disabled = false;
+        }
+
+        // Add message to chat
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = sender === 'user' ? 'user-message' : 'bot-message';
+            messageDiv.innerHTML = `<div class="message-content">${text.replace(/\n/g, '<br>')}</div>`;
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        // Send button click
+        chatSend.addEventListener('click', sendMessage);
+
+        // Enter key to send
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+
+</body>
+</html>

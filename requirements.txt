@@ -1,0 +1,6 @@
+flask
+requests
+beautifulsoup4
+flask_sqlalchemy
+flask_bcrypt
+flask_login

@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Smart Price Tracker{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Ensure product images render consistently -->
+    <style>
+        .product-img {
+            width: 96px;
+            height: 96px;
+            object-fit: contain;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #fafafa;
+        }
+    </style>
+
+    <div class="main-container">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h2 mb-1">
+                    <i class="fas fa-chart-line text-primary me-2"></i>Your Tracked Products
+                </h1>
+                <p class="text-muted mb-0">Monitor your tracked products and savings</p>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stat-card">
+                    <div class="stat-value text-primary">{{ stats.total_products }}</div>
+                    <div class="stat-label">Total Products</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stat-card">
+                    <div class="stat-value text-success">{{ stats.targets_reached }}</div>
+                    <div class="stat-label">Targets Reached</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stat-card">
+                    <div class="stat-value text-info">₹{{ "{:,.0f}".format(stats.potential_savings) }}</div>
+                    <div class="stat-label">Potential Savings</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stat-card">
+                    <div class="stat-value text-warning">0%</div>
+                    <div class="stat-label">Avg Savings Rate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Product Form -->
+        <div class="add-product-form mb-4">
+            <h5 class="mb-3">
+                <i class="fas fa-plus-circle text-primary me-2"></i>Add New Product
+            </h5>
+            <form action="{{ url_for('dashboard') }}" method="POST">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="url" class="form-label">Product URL</label>
+                        <input type="url" class="form-control" id="url" name="url" 
+                               placeholder="Paste Amazon, Flipkart, or Myntra URL here..." required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="target_price" class="form-label">Target Price (₹)</label>
+                        <input type="number" class="form-control" id="target_price" name="target_price" 
+                               placeholder="Enter target price" min="1" step="0.01" required>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-primary w-100 btn-custom">
+                            <i class="fas fa-plus me-1"></i>Add Product
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Products Grid -->
+        {% if products %}
+            <div class="row">
+                {% for p in products %}
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="card product-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex mb-3">
+
+                                {# Resilient image rendering:
+                                   - expects server to set p.image_url to a proxied URL (/proxy/img?u=...)
+                                   - falls back to a hosted placeholder
+                                   - referrerpolicy prevents hotlink referrer issues
+                                   - onerror fallback avoids broken image icon #}
+                                {% set img = p.image_url or 'https://via.placeholder.com/240x240?text=No+Image' %}
+                                <img
+                                    src="{{ img }}"
+                                    alt="{{ p.title }}"
+                                    class="product-img me-3"
+                                    loading="lazy"
+                                    referrerpolicy="no-referrer"
+                                    onerror="this.onerror=null;this.src='https://via.placeholder.com/240x240?text=No+Image';"
+                                />
+
+                                <div class="flex-grow-1">
+                                    <h6 class="card-title mb-2" title="{{ p.title }}">
+                                        {{ p.title[:60] }}{% if p.title|length > 60 %}...{% endif %}
+                                    </h6>
+                                    
+                                    <p class="card-subtitle mb-2 text-muted">
+                                        <i class="fas fa-store me-1"></i>{{ p.platform }}
+                                    </p>
+                                    
+                                    {% if p.rating %}
+                                    <div class="rating-stars mb-2">
+                                        {% for i in range(1, 6) %}
+                                            {% if p.rating >= i %}
+                                                <i class="fas fa-star"></i>
+                                            {% elif p.rating > i-1 and p.rating < i %}
+                                                <i class="fas fa-star-half-alt"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <span class="rating-count">
+                                            ({{ "{:,}".format(p.rating_count) if p.rating_count else 0 }})
+                                        </span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Price Section -->
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <span class="price-current">
+                                            ₹{{ "{:,.0f}".format(p.current_price) if p.current_price else "N/A" }}
+                                        </span>
+                                        <span class="price-target">
+                                            → ₹{{ "{:,.0f}".format(p.target_price) }}
+                                        </span>
+                                    </div>
+                                    
+                                    {% if p.current_price and p.target_price and p.current_price <= p.target_price %}
+                                    <span class="target-badge">
+                                        <i class="fas fa-check me-1"></i>Target Reached!
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>
+                                    Last checked: {{ p.last_checked.strftime('%d %b %Y') if p.last_checked else 'Never' }}
+                                </small>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="d-flex gap-2">
+                                <a href="{{ url_for('update_price', product_id=p.id) }}" 
+                                   class="btn btn-outline-primary btn-sm btn-custom flex-fill">
+                                    <i class="fas fa-sync-alt me-1"></i>Update
+                                </a>
+                                <a href="{{ p.url }}" target="_blank" 
+                                   class="btn btn-outline-info btn-sm btn-custom flex-fill">
+                                    <i class="fas fa-external-link-alt me-1"></i>View
+                                </a>
+                                <a href="{{ url_for('delete_product', product_id=p.id) }}" 
+                                   class="btn btn-outline-danger btn-sm btn-custom"
+                                   onclick="return confirm('Are you sure you want to remove this product?')">
+                                    <i class="fas fa-trash me-1"></i>Remove
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-5">
+                <i class="fas fa-shopping-cart fa-5x text-muted mb-4"></i>
+                <h3 class="text-muted mb-3">No products tracked yet</h3>
+                <p class="text-muted mb-4">
+                    <strong>New here?</strong> Add products by pasting Amazon, Flipkart, or Myntra URLs and setting your target prices. We'll email you when prices drop!
+                </p>
+                <div class="alert alert-info">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    Add your first product using the form above to start tracking prices!
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results - Price Tracker{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Search Results</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Search Results for "{{ query }}"</h2>
+        <div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
+                <i class="fas fa-search"></i> New Search
+            </button>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    {% if results %}
+    <div class="row">
+        {% for result in results %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                {% if result.image %}
+                <img src="{{ result.image }}" class="card-img-top" style="height: 200px; object-fit: contain;" alt="Product Image">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h6 class="card-title">{{ result.title[:80] }}{% if result.title|length > 80 %}...{% endif %}</h6>
+                    <div class="mt-auto">
+                        {% if result.price != "N/A" %}
+                        <p class="h5 text-success mb-2">₹{{ result.price }}</p>
+                        {% else %}
+                        <p class="text-muted mb-2">Price not available</p>
+                        {% endif %}
+                        
+                        <div class="btn-group w-100" role="group">
+                            <button type="button" class="btn btn-primary" 
+                                    onclick="addToWatchlist('{{ result.link }}', '{{ result.title|e }}', '{{ result.price }}')"
+                                    {% if result.price == "N/A" %}disabled{% endif %}>
+                                <i class="fas fa-plus"></i> Add to Watchlist
+                            </button>
+                            <a href="{{ result.link }}" target="_blank" class="btn btn-outline-info">
+                                <i class="fas fa-external-link-alt"></i> View
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+        <h4>No Results Found</h4>
+        <p class="text-muted">Try searching with different keywords</p>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
+            <i class="fas fa-search"></i> Try Another Search
+        </button>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Search Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Search Products</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('search') }}" method="GET">
+                    <div class="mb-3">
+                        <label for="query" class="form-label">Search Term</label>
+                        <input type="text" class="form-control" name="query" id="query" 
+                               placeholder="e.g., iPhone 13, laptop, headphones" required>
+                        <div class="form-text">Search for products on Amazon</div>
+                    </div>
+                    <div class="d-grid">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add to Watchlist Modal -->
+<div class="modal fade" id="addToWatchlistModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add to Watchlist</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="watchlistForm">
+                    <div class="mb-3">
+                        <label class="form-label">Product</label>
+                        <p id="productTitle" class="form-control-plaintext"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Current Price</label>
+                        <p id="currentPrice" class="form-control-plaintext text-success"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="targetPrice" class="form-label">Target Price (₹)</label>
+                        <input type="number" class="form-control" id="targetPrice" 
+                               step="0.01" min="1" required placeholder="Enter your target price">
+                        <div class="form-text">You'll be notified when price drops to this amount</div>
+                    </div>
+                    <input type="hidden" id="productUrl">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitToWatchlist()">
+                    <i class="fas fa-plus"></i> Add to Watchlist
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function addToWatchlist(url, title, price) {
+    document.getElementById('productTitle').textContent = title;
+    document.getElementById('currentPrice').textContent = price ? '₹' + price : 'Price not available';
+    document.getElementById('productUrl').value = url;
+    
+    // Set suggested target price (10% less than current price)
+    if (price && price !== "N/A") {
+        const currentPrice = parseInt(price.replace(/,/g, ''));
+        const suggestedTarget = Math.floor(currentPrice * 0.9);
+        document.getElementById('targetPrice').value = suggestedTarget;
+    }
+    
+    new bootstrap.Modal(document.getElementById('addToWatchlistModal')).show();
+}
+
+function submitToWatchlist() {
+    const url = document.getElementById('productUrl').value;
+    const targetPrice = document.getElementById('targetPrice').value;
+    
+    if (!targetPrice || targetPrice <= 0) {
+        alert('Please enter a valid target price');
+        return;
+    }
+    
+    fetch('/add_from_search', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            url: url,
+            target_price: targetPrice
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Product added to watchlist!');
+            bootstrap.Modal.getInstance(document.getElementById('addToWatchlistModal')).hide();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to add product to watchlist');
+    });
+}
+</script>
+{% endblock %}
